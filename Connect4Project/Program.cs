@@ -68,9 +68,36 @@ namespace Connect4Project
 {
     internal class Program
     {
+        public class TurnCounter
+        {
+            public int turnCounter;
+            public string currentPlayer;
+
+
+            public void IncreaseTurn()
+            {
+                turnCounter++;
+                if (turnCounter == 3)
+                {
+                    turnCounter = 1;
+                }
+                if(turnCounter == 1)
+                {
+                    currentPlayer = "R";
+                }
+                if (turnCounter == 2)
+                {
+                    currentPlayer = "Y";
+                }
+
+            }
+
+        }
+
         static void Main(string[] args)
         {
-            Console.WriteLine("hello worlds");
+            TurnCounter turnCounter = new TurnCounter();
+
         }
     }
 }
