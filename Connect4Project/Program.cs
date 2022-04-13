@@ -10,7 +10,7 @@ namespace Connect4Project
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("hello world");
+            Console.WriteLine("hello worlds");
         }
     }
 }
