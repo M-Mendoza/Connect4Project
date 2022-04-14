@@ -66,38 +66,52 @@ using System.Threading.Tasks;
 
 namespace Connect4Project
 {
-    internal class Program
+
+    public class TurnCounter
     {
-        public class TurnCounter
+
+        public int Turn = 0;
+        public string CurrentPlayer;
+        public TurnCounter(int turn, string currentPlayer)
         {
-            public int turnCounter;
-            public string currentPlayer;
+            Turn = turn;
+            CurrentPlayer = currentPlayer;
+        }
 
 
-            public void IncreaseTurn()
+        public void IncreaseTurn()
+        {
+            Turn++;
+            if (Turn == 3)
             {
-                turnCounter++;
-                if (turnCounter == 3)
-                {
-                    turnCounter = 1;
-                }
-                if(turnCounter == 1)
-                {
-                    currentPlayer = "R";
-                }
-                if (turnCounter == 2)
-                {
-                    currentPlayer = "Y";
-                }
-
+                Turn = 1;
+            }
+            if (Turn == 1)
+            {
+                CurrentPlayer = "R";
+            }
+            if (Turn == 2)
+            {
+                CurrentPlayer = "Y";
             }
 
         }
+    }
+
+    class Program
+    {
 
         static void Main(string[] args)
         {
-            TurnCounter turnCounter = new TurnCounter();
+
+            TurnCounter turncounter = new TurnCounter(0, "y");
+
+
 
         }
     }
+
 }
+
+    
+
