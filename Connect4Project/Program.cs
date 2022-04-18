@@ -72,8 +72,8 @@ namespace Connect4Project
     {
 
         public int Turn = 0;
-        public string CurrentPlayer;
-        public TurnCounter(int turn, string currentPlayer)
+        public char CurrentPlayer;
+        public TurnCounter(int turn, char currentPlayer)
         {
             Turn = turn;
             CurrentPlayer = currentPlayer;
@@ -89,12 +89,21 @@ namespace Connect4Project
             }
             if (Turn == 1)
             {
-                CurrentPlayer = "R";
+                CurrentPlayer = 'R';
             }
             if (Turn == 2)
             {
-                CurrentPlayer = "Y";
+                CurrentPlayer = 'Y';
             }
+
+        }
+    }
+
+    public static class PiecePlacement
+    {
+        public static void PlacePiece()
+        {
+
 
         }
     }
@@ -105,152 +114,315 @@ namespace Connect4Project
 
     }
 
-    class Program
+
+    public static class DisplayGameBoard
     {
 
-        static void Main(string[] args)
+        public static void DisplayBoard(char[,] board)
+        {
+            //defining board parameters
+            int rows = 6;
+            int cols = 7;
+
+            //populating the game board
+            for (int i = 1; i <= rows; i++)
+            {
+                Console.Write("| " + " ");
+                for (int j = 1; j <= cols; j++)
+                {
+                    if (board[i, j] != 'R' && board[i, j] != 'Y')
+                    {
+                        board[i, j] = 'O';
+
+                    }
+                    /*    else
+                            {
+                                board[i, j] = 'U';
+                            }*/
+                    Console.Write(board[i, j]);
+                    Console.Write("  ");
+                }
+                Console.Write("|\n");
+            }
+        }
+
+
+
+        class Program
         {
 
-            int victory = 0;
-            string command;
-            string[] gameBoard = { "O", "O", "O", "O", "O", "O", "O"};
-          
-
-            TurnCounter turncounter = new TurnCounter(0, "Y");
-            Console.WriteLine("Current player is " + turncounter.CurrentPlayer);
-
-            foreach (var slot in gameBoard)
+            static void Main(string[] args)
             {
-                Console.Write("{0} ", slot);
-            }
-            while (victory == 0)
-            {
-                Console.WriteLine("press slot to fill");
-                command = Console.ReadLine();
-                string choice = command;
-                switch (choice)
+
+                //need to change board loop to be DisplayBoard();
+
+                char[,] board = new char[9, 9];
+                DisplayGameBoard.DisplayBoard(board);
+                int victory = 0;
+                int command;
+                char[,] gameBoard = board;
+
+
+                TurnCounter turncounter = new TurnCounter(1, 'R');
+                Console.WriteLine("Current player is " + turncounter.CurrentPlayer);
+
+                /*    foreach (var slot in gameBoard)
+                    {
+                        Console.Write("{0} ", slot);
+                    }*/
+                while (victory == 0)
                 {
-                    case "0":
+                    Console.WriteLine("press slot to fill between 0 and 7");
+                    try
+                    {
+                        command = Int32.Parse(Console.ReadLine());
+                        /*   if (command > 7 && command < 1)
+                           {
+                               Console.WriteLine("Please enter a column between 1 and 7.");
+                           }
+                           else
+                           {*/
 
-                        Console.Write("Choice 0" +"\n");
 
-                        if (command == "0")
+                        int rows = 6;
+                        char piecePlacement;
+
+                        piecePlacement = gameBoard[rows, command];//places in according column with command.
+
+                        Console.WriteLine(turncounter.CurrentPlayer +" chooses column " + command);
+               /*         Console.WriteLine("Current player is " + turncounter.CurrentPlayer--);*/
+
+
+
+                        /* Console.WriteLine( "position is " + board[rows, command]);*/
+
+                        while ((piecePlacement != 'O') && rows > 0 && command > 0 && command < 8)
                         {
-                            
-                            gameBoard[0] = turncounter.CurrentPlayer;
-                            foreach (var slot in gameBoard)
+
+                            /*gameBoard[rows, command] = turncounter.CurrentPlayer;*/
+                            rows--; //if the row is occupied, we move up a space.
+                            if (rows >= 0) piecePlacement = gameBoard[rows, command];
+                            if (rows <= 0)
                             {
-                                Console.Write("{0} ", slot);
+                                Console.WriteLine("Column full. Please choose again");
+                                Console.WriteLine("Current player is " + turncounter.CurrentPlayer);
+                                turncounter.Turn--; //lowers the turn so if column is full and they choose this, they don't lose a turn.
                             }
-                            turncounter.IncreaseTurn();
-                            Console.WriteLine("players turn is " + turncounter.CurrentPlayer);
-
                         }
-                        else
-                        {
-                            Console.WriteLine("input not detected properly");
-                        }
-                        break;
+
+                        gameBoard[rows, command] = turncounter.CurrentPlayer;
+
+                        DisplayGameBoard.DisplayBoard(gameBoard);
+
+                        turncounter.IncreaseTurn();
+                    }
+                    catch (Exception)
+                    {
+                        Console.WriteLine("Please enter a correct value"); //catch if incorrect numbers or letters are entered. Don't increase turn.
+                    }
+
+                    
+                 }
+                   
 
 
 
-                    case "1":
-
-                        Console.Write("Choice 1" + "\n");
-
-                        if (command == "1")
-                        {
-                            
-                            gameBoard[1] = turncounter.CurrentPlayer;
-                            foreach (var slot in gameBoard)
-                            {
-                                Console.Write("{0} ", slot);
-                            }
-                            turncounter.IncreaseTurn();
-                            Console.WriteLine("players turn is " + turncounter.CurrentPlayer);
-
-                        }
-                        else
-                        {
-                            Console.WriteLine("input not detected properly");
-                        }
-                        break;
+                    /*       if(gameBoard[rows, command] == 'Y')
+                           {
+                               rows -= 1;
+                           }
+                           if(gameBoard[rows,command] == 'R')
+                           {
+                               rows -= 1;
+                           }*/
 
 
+                    /*      Console.Write("Choice 0" + "\n");
 
-                    case "2":
+                          if (command == "0")
+                          {
 
-                        Console.Write("Choice 2" + "\n");
+                              int rows = 6;
+                              int cols = 7;
 
-                        if (command == "2")
-                        {
+                              gameBoard[6, 1] = turncounter.CurrentPlayer;
 
-                            gameBoard[2] = turncounter.CurrentPlayer;
-                            foreach (var slot in gameBoard)
-                            {
-                                Console.Write("{0} ", slot);
-                            }
-                            turncounter.IncreaseTurn();
-                            Console.WriteLine("players turn is " + turncounter.CurrentPlayer);
+                              if (gameBoard[6, 1] != " O ")
+                              {
+                                  gameBoard[5, 1] = turncounter.CurrentPlayer;
+                              }
+      */
 
-                        }
-                        else
-                        {
-                            Console.WriteLine("input not detected properly");
-                        }
-                        break;
 
-                    case "3":
 
-                        Console.Write("Choice 3" + "\n");
 
-                        if (command == "3")
-                        {
+                    /*int i = 1; 
+                    int j = 1;*/
 
-                            gameBoard[3] = turncounter.CurrentPlayer;
-                            foreach (var slot in gameBoard)
-                            {
-                                Console.Write("{0} ", slot);
-                            }
-                            turncounter.IncreaseTurn();
-                            Console.WriteLine("players turn is " + turncounter.CurrentPlayer);
+                    /* switch (choice)
+                     {
+                         case "0":
 
-                        }
-                        else
-                        {
-                            Console.WriteLine("input not detected properly");
-                        }
-                        break;
+                             Console.Write("Choice 0" + "\n");
+
+                             if (command == "0")
+                             {
+
+                                 int rows = 6;
+                                 int cols = 7;
+
+                                 gameBoard[6,1] = turncounter.CurrentPlayer;
+
+                                 if (gameBoard[6, 1] != " O ")
+                                 {
+                                     gameBoard[5, 1] = turncounter.CurrentPlayer;
+                                 }
+
+
+                                 for (i = 1; i <= rows; i++)
+                                 {   
+                                     Console.Write("|");
+                                     for (j = 1; j <= cols; j++)
+                                     {
+                                         if (board[i, j] != " R " && board[i, j] != " Y ")
+                                         {
+                                             board[i, j] = " O ";
+                                         }
+
+                                         Console.Write(board[i, j]);
+                                         *//*      }*//*
+
+                                     }
+                                     Console.Write("| \n");
+
+
+                                 }
+
+                                 turncounter.IncreaseTurn();
+
+                                 Console.WriteLine("players turn is " + turncounter.CurrentPlayer);
+
+                             }
+
+                             break;
+
+
+
+
+                         case "1":
+
+                             Console.Write("Choice 1" + "\n");
+
+                             if (command == "1")
+                             {
+
+                                 gameBoard[0,1] = turncounter.CurrentPlayer;
+                                 foreach (var slot in gameBoard)
+                                 {
+                                     Console.Write(" {0} ", slot);
+                                 }
+                                 turncounter.IncreaseTurn();
+                                 Console.WriteLine("players turn is " + turncounter.CurrentPlayer);
+
+                             }
+                             else
+                             {
+                                 Console.WriteLine("input not detected properly");
+                             }
+                             break;
+
+
+
+                         case "2":
+
+                             Console.Write("Choice 2" + "\n");
+
+                             if (command == "2")
+                             {
+
+                                 gameBoard[0,2] = turncounter.CurrentPlayer;
+                                 foreach (var slot in gameBoard)
+                                 {
+                                     Console.Write("{0} ", slot);
+                                 }
+                                 turncounter.IncreaseTurn();
+                                 Console.WriteLine("players turn is " + turncounter.CurrentPlayer);
+
+                             }
+                             else
+                             {
+                                 Console.WriteLine("input not detected properly");
+                             }
+                             break;
+
+                         case "3":
+
+                             Console.Write("Choice 3" + "\n");
+
+                             if (command == "3")
+                             {
+
+                                 gameBoard[0,3] = turncounter.CurrentPlayer;
+                                 foreach (var slot in gameBoard)
+                                 {
+                                     Console.Write("{0} ", slot);
+                                 }
+                                 turncounter.IncreaseTurn();
+                                 Console.WriteLine("players turn is " + turncounter.CurrentPlayer);
+
+                             }
+                             else
+                             {
+                                 Console.WriteLine("input not detected properly");
+                             }
+                             break;
+                     }*/
+
+
+
+                    /*      }*/
+                    Console.Read();
                 }
 
-                
-             
-            }
-            Console.Read();
-        }
-            
 
- /*           while(victory == 0)
-            {
 
-                Console.WriteLine("Press 4 to increase turn");*/
 
-              /*  Console.WriteLine("press 4 to increase turn");
-                Console.ReadLine();
-           
-                if(turncounter.Turn == 0)
-                turncounter.IncreaseTurn();
-                Console.WriteLine(turncounter.Turn);
-                Console.WriteLine("current player is " + turncounter.CurrentPlayer);
-                turncounter.IncreaseTurn();*/
+
+                /*    static void Main(string[] args)
+                    {
+                        char[,] board = new char[9, 9];
+                        DisplayBoard(board);
+
+
+                        Console.Read();
+                    }
+                }*/
+
+
+                /*           while(victory == 0)
+                           {
+
+                               Console.WriteLine("Press 4 to increase turn");*/
+
+                /*  Console.WriteLine("press 4 to increase turn");
+                  Console.ReadLine();
+
+                  if(turncounter.Turn == 0)
+                  turncounter.IncreaseTurn();
+                  Console.WriteLine(turncounter.Turn);
+                  Console.WriteLine("current player is " + turncounter.CurrentPlayer);
+                  turncounter.IncreaseTurn();*/
                 /*Console.WriteLine("current player is " + turncounter.CurrentPlayer);*/
             }
+        }
+    }
+
 
             
 
 
 
-        }
+        
     
 
 
