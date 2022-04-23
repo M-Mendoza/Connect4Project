@@ -4,7 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 //pseudo code.
+
+
 
 //2 players. when one turn is made turn increases
 //turn = 1;
