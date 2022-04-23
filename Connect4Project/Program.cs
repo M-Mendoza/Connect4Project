@@ -137,7 +137,7 @@ namespace Connect4Project
                             Victory = true;
 
                             Console.WriteLine(" Victory is " + Victory);
-                            Console.WriteLine("Win horizontally at Row {0}, column {1} for player ", i, j);
+                            Console.WriteLine("Win horizontally at Row {0}, column {1} ", i, j);
 
                         }
                     }
