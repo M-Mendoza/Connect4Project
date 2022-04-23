@@ -68,311 +68,439 @@ using System.Threading.Tasks;
 namespace Connect4Project
 {
 
-    public class TurnCounter
+    class Program
     {
 
-        public int Turn = 0;
-        public char CurrentPlayer;
-
-        public TurnCounter(int turn, char currentPlayer)
+        public class TurnCounter
         {
-            Turn = turn;
-            CurrentPlayer = currentPlayer;
-        }
 
+            public int Turn = 0;
+            public char CurrentPlayer;
 
-        public void IncreaseTurn()
-        {
-            ++Turn;
-            if (Turn == 3)
+            public TurnCounter(int turn, char currentPlayer)
             {
-                Turn = 1;
-            }
-            if (Turn == 1)
-            {
-                CurrentPlayer = 'R';
-
-            }
-            if (Turn == 2)
-            {
-                CurrentPlayer = 'Y';
+                Turn = turn;
+                CurrentPlayer = currentPlayer;
             }
 
-        }
-    }
 
-   /* public class PiecePlacement : TurnCounter
-    {
-        public PiecePlacement(int turn, char currentPlayer) : base(turn, currentPlayer)
-        {
-           
-        }
-
-        public void PlacePiece()
-        {
-            IncreaseTurn();
-
-        }
-    }*/
-
-   /* public class CheckVictory : TurnCounter
-    {
-        public CheckVictory(int turn, char currentPlayer) : base(turn, currentPlayer)
-        {
-            
-            IncreaseTurn();
-        }
-    }*/
-
-
-    public static class DisplayGameBoard
-    {
-
-        public static void DisplayBoard(char[,] board)
-        {
-            //defining board parameters
-            int rows = 6;
-            int cols = 7;
-
-            //populating the game board
-            for (int i = 1; i <= rows; i++)
+            public void IncreaseTurn()
             {
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.Write("| " + " ");
-                for (int j = 1; j <= cols; j++)
+                ++Turn;
+                if (Turn == 3)
                 {
-                    if (board[i, j] != 'R' && board[i, j] != 'Y')
+                    Turn = 1;
+                }
+                if (Turn == 1)
+                {
+                    CurrentPlayer = 'R';
+
+                }
+                if (Turn == 2)
+                {
+                    CurrentPlayer = 'Y';
+                }
+
+            }
+        }
+
+
+        public static class VictoryChecker
+        {
+
+            public static char[,] Board = new char[9, 9];
+            public static bool Victory = false;
+
+            /*  public VictoryChecker(char[,] board, bool victory)
+              {
+                  Board = board;
+                  Victory = victory;
+              }*/
+
+            public static bool hasWonHorizontally(char piecePlacement)
+            {
+
+                char[,] board = Board;
+
+                for (int i = 0; i < 7; i++)
+                {
+                    for (int j = 0; j < 6; j++)
                     {
-                        board[i, j] = 'O';
+                        if (
+                            board[i, j] == piecePlacement &&
+                            board[i, j + 1] == piecePlacement &&
+                            board[i, j + 2] == piecePlacement &&
+                            board[i, j + 3] == piecePlacement)
+                        {
+                            Console.ForegroundColor = ConsoleColor.White;
+
+                            Victory = true;
+
+                            Console.WriteLine(" Victory is " + Victory);
+                            Console.WriteLine("Win horizontally at Row {0}, column {1} for player ", i, j);
+
+                        }
+                    }
+                }
+                return Victory;
+            }
+
+            public static void hasWonVertically(char piecePlacement)
+            {
+                char[,] board = Board;
+
+                for (int i = 0; i < 6; i++)
+                {
+                    for (int j = 0; j < 7; j++)
+                    {
+                        if (
+                            board[i, j] == piecePlacement &&
+                            board[i + 1, j] == piecePlacement &&
+                            board[i + 2, j] == piecePlacement &&
+                            board[i + 3, j] == piecePlacement)
+                        {
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine("Win vertically at Row {0}, column {1}!", i, j);
+
+                            Victory = true;
+                        }
+                    }
+                }
+            }
+
+            public static bool hasWonDiagonallyDown(char piecePlacement)
+            {
+                char[,] board = Board;
+
+                for (int i = 0; i < 6; i++)
+                {
+                    for (int j = 0; j < 7; j++)
+                    {
+                        if (
+                            board[i, j] == piecePlacement &&
+                            board[i + 1, j + 1] == piecePlacement &&
+                            board[i + 2, j + 2] == piecePlacement &&
+                            board[i + 3, j + 3] == piecePlacement)
+                        {
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine("Win diagonally at Row {0}, column {1}!", i, j);
+
+                            Victory = true;
+                        }
+                    }
+                }
+                return Victory;
+            }
+
+            public static bool hasWonDiagonallyUp(char piecePlacement)
+            {
+                char[,] board = Board;
+
+                for (int i = 0; i < 6; i++)
+                {
+                    for (int j = 0; j < 7; j++)
+                    {
+                        if (
+                            board[i, j] == piecePlacement &&
+                            board[i + 1, j - 1] == piecePlacement &&
+                            board[i + 2, j - 2] == piecePlacement &&
+                            board[i + 3, j - 3] == piecePlacement)
+                        {
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine("Win diagonally at Row {0}, column {1}!", i, j);
+
+                            Victory = true;
+                        }
+                    }
+                }
+                return Victory;
+            }
+        }
+
+
+
+            public static class DisplayGameBoard
+            {
+                /*   public DisplayGameBoard(char[,] board) : base(board)
+                   {
+                       Board = board;
+                   }*/
+
+                public static void DisplayBoard(char[,] board)
+                {
+                    //defining board parameters
+                    int rows = 6;
+                    int cols = 7;
+
+                    //populating the game board
+                    for (int i = 1; i <= rows; i++)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        Console.Write("| " + " ");
+                        for (int j = 1; j <= cols; j++)
+                        {
+                            if (board[i, j] != 'R' && board[i, j] != 'Y')
+                            {
+                                board[i, j] = 'O';
+
+                            }
+
+                            Console.Write(board[i, j]);
+                            Console.Write("  ");
+
+                        }
+                        Console.Write("|\n");
 
                     }
-                    /*    else
+                }
+            }
+
+
+
+                static void Main(string[] args)
+                {
+                    ResetGame();
+                    void ResetGame() //Initializes current game, and also resets game after if player chooses to. Whole program is wrapped around this to restart.
+                    {
+
+                        char[,] board = VictoryChecker.Board;
+                        DisplayGameBoard.DisplayBoard(board);
+                     /*   bool victory = VictoryChecker.Victory;
+                        bool Victory = VictoryChecker.Victory;*/
+                        /* bool victory = false;*/
+                        TurnCounter turncounter = new TurnCounter(1, 'R');
+
+                        /*VictoryChecker victoryChecker = new VictoryChecker(board);*/
+                        int command;
+                        char[,] gameBoard = board;
+
+
+                        Console.Write("Current player is " + turncounter.CurrentPlayer);
+                        if (turncounter.CurrentPlayer == 'y')
+                        {
+                            Console.Write("ellow. ");
+                        }
+                        if (turncounter.CurrentPlayer == 'R')
+                        {
+                            Console.Write("ed. ");
+                        }
+
+
+                        /*    foreach (var slot in gameBoard)
                             {
-                                board[i, j] = 'U';
+                                Console.Write("{0} ", slot);
                             }*/
-                    Console.Write(board[i, j]);
-                    Console.Write("  ");
+                        while (VictoryChecker.Victory == false)
+                        {
+                            Console.WriteLine("press slot to fill between 1 and 7");
+                            try
+                            {
+                                command = Int32.Parse(Console.ReadLine());
+                                /*   if (command > 7 && command < 1)
+                                   {
+                                       Console.WriteLine("Please enter a column between 1 and 7.");
+                                   }
+                                   else
+                                   {*/
+                                int rows = 6;
+                                char piecePlacement;
+
+                                piecePlacement = gameBoard[rows, command];//places in according column with command.
+
+                                if (turncounter.CurrentPlayer == 'Y')
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Yellow;
+                                }
+                                if (turncounter.CurrentPlayer == 'R')
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Red;
+                                }
 
 
+                                Console.WriteLine(turncounter.CurrentPlayer + " chooses column " + command);
+
+                                while ((piecePlacement != 'O') && rows > 0 && command > 0 && command < 8)
+                                {
+
+
+
+                                    /*gameBoard[rows, command] = turncounter.CurrentPlayer;*/
+                                    rows--; //if the row is occupied, we move up a space.
+                                    if (rows > 0) piecePlacement = gameBoard[rows, command];
+                                    if (rows <= 0)
+                                    {
+
+                                        Console.WriteLine("Column full. Please choose again");
+                                        Console.WriteLine("Current player is " + turncounter.CurrentPlayer);
+                                        turncounter.Turn--; //lowers the turn so if column is full and they choose this, they don't lose a turn.
+                                    }
+                                }
+
+                                gameBoard[rows, command] = turncounter.CurrentPlayer;
+
+                                VictoryChecker.hasWonHorizontally(turncounter.CurrentPlayer);
+                                /*hasWonHorizontally(turncounter.CurrentPlayer);*/
+                                /*    hasWonHorizontally(turncounter.CurrentPlayer);*/
+                                VictoryChecker.hasWonVertically(turncounter.CurrentPlayer);
+                                VictoryChecker.hasWonDiagonallyDown(turncounter.CurrentPlayer);
+                                VictoryChecker.hasWonDiagonallyUp(turncounter.CurrentPlayer);
+
+                                DisplayGameBoard.DisplayBoard(board);
+
+                                turncounter.IncreaseTurn();
+
+
+                            }
+                            catch (Exception)
+                            {
+                                Console.WriteLine("Please enter a correct value"); //catch if incorrect numbers or letters are entered. Don't increase turn.
+                            }
+                        }
+
+                        while (VictoryChecker.Victory == true)
+                        {
+                            Console.WriteLine("Play again? Y/N");
+                            string answer = Console.ReadLine();
+                            if (answer == "Y" || answer == "y")
+                            {
+                                VictoryChecker.Victory = false;
+                                VictoryChecker.Board = new char[9, 9];
+                                ResetGame();
+                            }
+
+                            if (answer == "N" || answer == "n")
+                            {
+                                Environment.Exit(0); //exits if user answers n or N. keeps prompting otherwise
+                            }
+                        }
+                        Console.Read();
+                    }
                 }
-                Console.Write("|\n");
-
             }
-        }
+    }
+
+//test code
 
 
-        class Program
-        {
+/* public class PiecePlacement : TurnCounter
+     {
+         public PiecePlacement(int turn, char currentPlayer) : base(turn, currentPlayer)
+         {
 
-            static void Main(string[] args)
-            {
-                ResetGame();
-                void ResetGame() //Initializes current game, and also resets game after if player chooses to. Whole program is wrapped around this to restart.
-                {
+         }
 
-                    char[,] board = new char[9, 9];
-                    DisplayGameBoard.DisplayBoard(board);
-                    bool victory = false;
-                    TurnCounter turncounter = new TurnCounter(1, 'R');
-                    int command;
-                    char[,] gameBoard = board;
+         public void PlacePiece()
+         {
+             IncreaseTurn();
 
-                    bool hasWonHorizontally(char piecePlacement)
-                    {
+         }
+     }*/
 
-                        for (int i = 0; i < 7; i++)
-                        {
-                            for (int j = 0; j < 6; j++)
-                            {
-                                if (
-                                    board[i, j] == piecePlacement &&
-                                    board[i, j + 1] == piecePlacement &&
-                                    board[i, j + 2] == piecePlacement &&
-                                    board[i, j + 3] == piecePlacement)
-                                {
-                                    Console.ForegroundColor = ConsoleColor.White;
-                                    Console.WriteLine("Win horizontally at Row {0}, column {1} for player " + turncounter.CurrentPlayer, i, j);
+/*     public class CheckVictory : TurnCounter
+     {
+         public CheckVictory(int turn, char currentPlayer) : base(turn, currentPlayer)
+         {
 
-                                    victory = true;
-                                }
-                            }
-                        }
-                        return victory;
-                    }
+             IncreaseTurn();
 
-                    bool hasWonVertically(char piecePlacement)
-                    {
-
-                        for (int i = 0; i < 6; i++)
-                        {
-                            for (int j = 0; j < 7; j++)
-                            {
-                                if (
-                                    board[i, j] == piecePlacement &&
-                                    board[i + 1, j] == piecePlacement &&
-                                    board[i + 2, j] == piecePlacement &&
-                                    board[i + 3, j] == piecePlacement)
-                                {
-                                    Console.ForegroundColor = ConsoleColor.White;
-                                    Console.WriteLine("Win vertically at Row {0}, column {1}!", i, j);
-
-                                    victory = true;
-                                }
-                            }
-                        }
-                        return victory;
-                    }
-
-                    bool hasWonDiagonallyDown(char piecePlacement)
-                    {
-
-                        for (int i = 0; i < 6; i++)
-                        {
-                            for (int j = 0; j < 7; j++)
-                            {
-                                if (
-                                    board[i, j] == piecePlacement &&
-                                    board[i + 1, j + 1] == piecePlacement &&
-                                    board[i + 2, j + 2] == piecePlacement &&
-                                    board[i + 3, j + 3] == piecePlacement)
-                                {
-                                    Console.ForegroundColor = ConsoleColor.White;
-                                    Console.WriteLine("Win diagonally at Row {0}, column {1}!", i, j);
-
-                                    victory = true;
-                                }
-                            }
-                        }
-                        return victory;
-                    }
+         }
+     }*/
 
 
-                    bool hasWonDiagonallyUp(char piecePlacement)
-                    {
+/*           bool hasWonHorizontally(char piecePlacement)
+                       {
 
-                        for (int i = 0; i < 6; i++)
-                        {
-                            for (int j = 0; j < 7; j++)
-                            {
-                                if (
-                                    board[i, j] == piecePlacement &&
-                                    board[i + 1, j - 1] == piecePlacement &&
-                                    board[i + 2, j - 2] == piecePlacement &&
-                                    board[i + 3, j - 3] == piecePlacement)
-                                {
-                                    Console.ForegroundColor = ConsoleColor.White;
-                                    Console.WriteLine("Win diagonally at Row {0}, column {1}!", i, j);
-
-                                    victory = true;
-                                }
-                            }
-                        }
-                        return victory;
-                    }
-
-                   /* while (victory == false)
-                    {*/
-
-                        
-
-
-                        Console.WriteLine("Current player is " + turncounter.CurrentPlayer);
-
-                    /*    foreach (var slot in gameBoard)
-                        {
-                            Console.Write("{0} ", slot);
-                        }*/
-                    while (victory == false)
-                    {
-                        Console.WriteLine("press slot to fill between 1 and 7");
-                        try
-                        {
-                            command = Int32.Parse(Console.ReadLine());
-                            /*   if (command > 7 && command < 1)
+                           for (int i = 0; i < 7; i++)
+                           {
+                               for (int j = 0; j < 6; j++)
                                {
-                                   Console.WriteLine("Please enter a column between 1 and 7.");
+                                   if (
+                                       board[i, j] == piecePlacement &&
+                                       board[i, j + 1] == piecePlacement &&
+                                       board[i, j + 2] == piecePlacement &&
+                                       board[i, j + 3] == piecePlacement)
+                                   {
+                                       Console.ForegroundColor = ConsoleColor.White;
+                                       Console.WriteLine("Win horizontally at Row {0}, column {1} for player " + turncounter.CurrentPlayer, i, j);
+
+                                       victory = true;
+                                   }
                                }
-                               else
-                               {*/
-                            int rows = 6;
-                            char piecePlacement;
+                           }
+                           return victory;
+                       }*/
 
-                            piecePlacement = gameBoard[rows, command];//places in according column with command.
+/*   void hasWonVertically(char piecePlacement)
+   {
 
-                            if (turncounter.CurrentPlayer == 'Y')
-                            {
-                                Console.ForegroundColor = ConsoleColor.Yellow;
-                            }
-                            if (turncounter.CurrentPlayer == 'R')
-                            {
-                                Console.ForegroundColor = ConsoleColor.Red;
-                            }
+       for (int i = 0; i < 6; i++)
+       {
+           for (int j = 0; j < 7; j++)
+           {
+               if (
+                   board[i, j] == piecePlacement &&
+                   board[i + 1, j] == piecePlacement &&
+                   board[i + 2, j] == piecePlacement &&
+                   board[i + 3, j] == piecePlacement)
+               {
+                   Console.ForegroundColor = ConsoleColor.White;
+                   Console.WriteLine("Win vertically at Row {0}, column {1}!", i, j);
 
+                   VictoryChecker.Victory = true;
+               }
+           }
+       }
+   }*/
 
-                            Console.WriteLine(turncounter.CurrentPlayer + " chooses column " + command);
+/*bool hasWonDiagonallyDown(char piecePlacement)
+{
 
-                            /*         Console.WriteLine("Current player is " + turncounter.CurrentPlayer--);*/
+    for (int i = 0; i < 6; i++)
+    {
+        for (int j = 0; j < 7; j++)
+        {
+            if (
+                board[i, j] == piecePlacement &&
+                board[i + 1, j + 1] == piecePlacement &&
+                board[i + 2, j + 2] == piecePlacement &&
+                board[i + 3, j + 3] == piecePlacement)
+            {
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine("Win diagonally at Row {0}, column {1}!", i, j);
 
-
-
-                            /* Console.WriteLine( "position is " + board[rows, command]);*/
-
-                            while ((piecePlacement != 'O') && rows > 0 && command > 0 && command < 8)
-                            {
-
-
-
-                                /*gameBoard[rows, command] = turncounter.CurrentPlayer;*/
-                                rows--; //if the row is occupied, we move up a space.
-                                if (rows >= 0) piecePlacement = gameBoard[rows, command];
-                                if (rows <= 0)
-                                {
-
-                                    Console.WriteLine("Column full. Please choose again");
-                                    Console.WriteLine("Current player is " + turncounter.CurrentPlayer);
-                                    turncounter.Turn--; //lowers the turn so if column is full and they choose this, they don't lose a turn.
-                                }
-                            }
-
-                            gameBoard[rows, command] = turncounter.CurrentPlayer;
-
-                            hasWonHorizontally(turncounter.CurrentPlayer);
-                            hasWonVertically(turncounter.CurrentPlayer);
-                            hasWonDiagonallyDown(turncounter.CurrentPlayer);
-                            hasWonDiagonallyUp(turncounter.CurrentPlayer);
-
-                            DisplayGameBoard.DisplayBoard(gameBoard);
-
-                            turncounter.IncreaseTurn();
-
-
-                        }
-                        catch (Exception)
-                        {
-                            Console.WriteLine("Please enter a correct value"); //catch if incorrect numbers or letters are entered. Don't increase turn.
-                        }
-                    }
-
-                    while (victory == true)
-                    {
-                        Console.WriteLine("Play again? Y/N");
-                        string answer = Console.ReadLine();
-                        if (answer == "Y" || answer == "y") {
-                            victory = false;
-                            ResetGame();
-                        }
-                            
-                        if (answer == "N" || answer == "n")
-                        {
-                            Environment.Exit(0);
-                        }
-                    }
-                    Console.Read();
-                }
+                VictoryChecker.Victory = true;
             }
         }
     }
-}
+    return VictoryChecker.Victory;
+}*/
+
+
+/*       bool hasWonDiagonallyUp(char piecePlacement)
+       {
+
+           for (int i = 0; i < 6; i++)
+           {
+               for (int j = 0; j < 7; j++)
+               {
+                   if (
+                       board[i, j] == piecePlacement &&
+                       board[i + 1, j - 1] == piecePlacement &&
+                       board[i + 2, j - 2] == piecePlacement &&
+                       board[i + 3, j - 3] == piecePlacement)
+                   {
+                       Console.ForegroundColor = ConsoleColor.White;
+                       Console.WriteLine("Win diagonally at Row {0}, column {1}!", i, j);
+
+                       VictoryChecker.Victory = true;
+                   }
+               }
+           }
+           return VictoryChecker.Victory;
+}*/
+
+/* while (victory == false)
+ {*/
 
 
 
